@@ -1,0 +1,29 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "meli-agentic-app/package.json", "use": "@vercel/next" },
+    { "src": "py-backend/app.py", "use": "@vercel/python", "config": { "runtime": "python3.9" } }
+  ],
+  "routes": [
+    { 
+      "src": "/py-api/health", 
+      "dest": "py-backend/app.py",
+      "methods": ["GET"]
+    },
+    { 
+      "src": "/py-api/refine", 
+      "dest": "py-backend/app.py",
+      "methods": ["POST", "OPTIONS"]
+    },
+    { 
+      "src": "/py-api/image_extract", 
+      "dest": "py-backend/app.py",
+      "methods": ["POST", "OPTIONS"]
+    },
+    { 
+      "src": "/(.*)", 
+      "dest": "meli-agentic-app/$1"
+    }
+  ]
+}
+

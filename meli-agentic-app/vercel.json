@@ -1,0 +1,20 @@
+{
+  "functions": {
+    "app/api/screenshot/route.ts": {
+      "maxDuration": 60,
+      "memory": 1024
+    },
+    "app/api/run/route.ts": {
+      "maxDuration": 60,
+      "memory": 1024
+    },
+    "app/api/ingest/route.ts": {
+      "maxDuration": 60,
+      "memory": 1024
+    },
+    "app/api/search/route.ts": {
+      "maxDuration": 60,
+      "memory": 1024
+    }
+  }
+}

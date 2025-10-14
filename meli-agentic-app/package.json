@@ -1,0 +1,36 @@
+{
+  "name": "product-capture-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@langchain/langgraph": "^0.2.6",
+    "@langchain/openai": "^0.2.0",
+    "@sparticuz/chromium": "^126.0.0",
+    "cheerio": "^1.0.0-rc.12",
+    "langchain": "^0.2.16",
+    "next": "^14.2.8",
+    "puppeteer-core": "^22.12.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.12",
+    "@types/react": "^18.2.79",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.8",
+    "puppeteer": "^22.12.1",
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "node": ">=18.17.0"
+  }
+}
+
