@@ -6,7 +6,7 @@ This project is configured for deployment on Vercel as a monorepo with both fron
 
 ```
 .
-├── meli-agentic-app/          # Next.js frontend
+├── frontend/                   # Next.js frontend
 │   ├── app/
 │   ├── lib/
 │   ├── package.json
@@ -42,7 +42,7 @@ Deploy both frontend and backend together from the root directory.
 ### Option 2: Separate Deployments
 
 #### Frontend Only:
-1. Set root directory to `meli-agentic-app`
+1. Set root directory to `frontend`
 2. Set environment variable: `PY_BACKEND_URL=https://your-backend-url`
 
 #### Backend Only:
@@ -60,7 +60,7 @@ Deploy both frontend and backend together from the root directory.
 
 2. **Start Frontend:**
    ```bash
-   cd meli-agentic-app
+   cd frontend
    
    # Create .env.local with:
    echo "PY_BACKEND_URL=http://localhost:8002" > .env.local
@@ -93,7 +93,7 @@ When deployed, these are accessible at `/py-api/*`:
 - No CORS issues when deployed together
 
 ### Local development issues
-- Make sure PY_BACKEND_URL is set in `meli-agentic-app/.env.local`
+- Make sure PY_BACKEND_URL is set in `frontend/.env.local`
 - Backend must be running on port 8002 for local dev
 - Frontend must be running on port 3002 for local dev
 

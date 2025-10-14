@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-    { "src": "meli-agentic-app/package.json", "use": "@vercel/next" },
+    { "src": "frontend/package.json", "use": "@vercel/next" },
     { "src": "py-backend/app.py", "use": "@vercel/python", "config": { "runtime": "python3.9" } }
   ],
   "routes": [
@@ -22,7 +22,7 @@
     },
     { 
       "src": "/(.*)", 
-      "dest": "meli-agentic-app/$1"
+      "dest": "frontend/$1"
     }
   ]
 }

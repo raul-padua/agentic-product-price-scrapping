@@ -28,7 +28,7 @@ An AI-powered web application for capturing and analyzing product information fr
 
 ```
 .
-├── meli-agentic-app/          # Next.js frontend
+├── frontend/                  # Next.js frontend
 │   ├── app/                   # Next.js app directory
 │   │   ├── api/              # API routes
 │   │   ├── page.tsx          # Main capture page
@@ -67,7 +67,7 @@ An AI-powered web application for capturing and analyzing product information fr
 
 3. **Set up the Next.js frontend:**
    ```bash
-   cd meli-agentic-app
+   cd frontend
    npm install
    
    # Create .env.local file
