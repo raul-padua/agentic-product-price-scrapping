@@ -31,7 +31,8 @@ export async function POST(req: NextRequest) {
       : String(domainsInput || "").split(/\n|,|\s+/).map((d) => d.trim()).filter(Boolean);
 
     const siteFilter = userDomains.length > 0 ? userDomains.map((d) => `site:${d}`).join(" OR ") : "";
-    const enhancedQuery = `${query} ${siteFilter ? siteFilter : ""} comprar preço produto`.trim();
+    // Enhanced query focusing on product listings and prices
+    const enhancedQuery = `${query} ${siteFilter ? siteFilter : ""} buy price product listing`.trim();
 
     const payload1: any = {
       api_key: tavilyKey,
@@ -100,6 +101,7 @@ export async function POST(req: NextRequest) {
     });
     // Curate direct product listings based on domain allowlist and URL patterns
     const allowed = new Set(userDomains);
+    // Enhanced product URL patterns for better product page detection
     const productPatterns = [
       /\/p\//i,
       /\/dp\//i,
@@ -108,21 +110,35 @@ export async function POST(req: NextRequest) {
       /\/item\//i,
       /\/offer\//i,
       /\/listing\//i,
-      /\/camera|celular|iphone|tv|notebook|tenis|panela|geladeira|smartwatch/i,
+      /\/buy\//i,
+      /\/shop\//i,
+      /\/(iphone|samsung|laptop|notebook|phone|watch|camera|tv|tablet|headphone|speaker)/i,
+      /-p-\d+/i, // Product ID patterns
+      /\/pd\//i, // Product detail
     ];
-    const isProductUrl = (u: string) => {
+    const isProductUrl = (u: string, hasPrice: boolean) => {
       try {
         const urlObj = new URL(u);
         const host = urlObj.hostname.replace(/^www\./, "");
-        const inDomain = Array.from(allowed).some((d) => host.endsWith(d));
-        const matchesPattern = productPatterns.some((re) => re.test(urlObj.pathname));
-        return inDomain && matchesPattern;
+        // If domains specified, check if in domain list
+        const inDomain = userDomains.length === 0 || Array.from(allowed).some((d) => host.endsWith(d));
+        // Check if URL pattern matches product page
+        const matchesPattern = productPatterns.some((re) => re.test(urlObj.pathname) || re.test(urlObj.hostname));
+        // Prioritize URLs with detected prices
+        return inDomain && (matchesPattern || hasPrice);
       } catch {
         return false;
       }
     };
+    // Filter and prioritize direct product listings with prices
     const listings = shopping
-      .filter((s) => (userDomains.length === 0 ? true : isProductUrl(s.url)))
+      .filter((s) => isProductUrl(s.url, !!s.price))
+      .sort((a, b) => {
+        // Prioritize listings with prices and promos
+        const scoreA = (a.price ? 2 : 0) + (a.promo ? 1 : 0);
+        const scoreB = (b.price ? 2 : 0) + (b.promo ? 1 : 0);
+        return scoreB - scoreA;
+      })
       .slice(0, 10);
 
     const cleanAnswer = stripJsonish(json?.answer || "");

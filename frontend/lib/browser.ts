@@ -19,9 +19,19 @@ export async function getBrowser(): Promise<CoreBrowser> {
     return cachedBrowser;
   }
 
-  const executablePath = await chromium.executablePath();
-  const args = [...chromium.args, "--disable-blink-features=AutomationControlled", "--lang=pt-BR,pt"] as string[];
+  // For Vercel deployment, ensure Chromium is properly configured
+  const executablePath = await chromium.executablePath("/tmp");
+  const args = [
+    ...chromium.args,
+    "--disable-blink-features=AutomationControlled",
+    "--lang=en-US,en",
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu"
+  ] as string[];
   if (proxyUrl) args.push(`--proxy-server=${proxyUrl}`);
+  
   cachedBrowser = await puppeteerCore.launch({
     args,
     defaultViewport: chromium.defaultViewport,

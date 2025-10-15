@@ -212,7 +212,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1 style={{ marginBottom: 8 }}>MELI Competitor Capture MVP</h1>
+      <h1 style={{ marginBottom: 8 }}>Product Capture & Analysis</h1>
       <p style={{ opacity: 0.8, marginBottom: 24 }}>
         Enter one or more product URLs (newline or comma separated). The app will
         screenshot and extract product, price, and promotions.
