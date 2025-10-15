@@ -13,19 +13,8 @@
   ],
   "routes": [
     { 
-      "src": "/py-api/health", 
-      "dest": "py-backend/app.py",
-      "methods": ["GET"]
-    },
-    { 
-      "src": "/py-api/refine", 
-      "dest": "py-backend/app.py",
-      "methods": ["POST", "OPTIONS"]
-    },
-    { 
-      "src": "/py-api/image_extract", 
-      "dest": "py-backend/app.py",
-      "methods": ["POST", "OPTIONS"]
+      "src": "/py-api/(.*)",
+      "dest": "py-backend/app.py"
     },
     { 
       "src": "/(.*)", 

@@ -32,12 +32,14 @@ class RefineOutput(BaseModel):
 app = FastAPI(title="Product Capture Python Backend")
 
 
-@app.get("/health")
+@app.get("/py-api/health")
+@app.get("/health")  # Keep both for compatibility
 def health():
     return {"ok": True}
 
 
-@app.post("/refine", response_model=RefineOutput)
+@app.post("/py-api/refine", response_model=RefineOutput)
+@app.post("/refine", response_model=RefineOutput)  # Keep both for compatibility
 def refine(payload: RefineInput):
     # Heuristic normalization first
     def detect_currency(url: str, raw: Optional[str]) -> Optional[str]:
@@ -250,7 +252,8 @@ class ImageExtractOutput(BaseModel):
     promotions: List[str] = []
 
 
-@app.post("/image_extract", response_model=ImageExtractOutput)
+@app.post("/py-api/image_extract", response_model=ImageExtractOutput)
+@app.post("/image_extract", response_model=ImageExtractOutput)  # Keep both for compatibility
 def image_extract(payload: ImageExtractInput):
     api_key = payload.openai_key or os.getenv("OPENAI_API_KEY")
     if not api_key or OpenAI is None:
