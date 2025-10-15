@@ -2,19 +2,20 @@
   "functions": {
     "app/api/screenshot/route.ts": {
       "maxDuration": 60,
-      "memory": 1024
+      "memory": 3008
     },
     "app/api/run/route.ts": {
       "maxDuration": 60,
-      "memory": 1024
+      "memory": 3008
     },
     "app/api/ingest/route.ts": {
       "maxDuration": 60,
-      "memory": 1024
+      "memory": 3008
     },
     "app/api/search/route.ts": {
       "maxDuration": 60,
       "memory": 1024
     }
-  }
+  },
+  "framework": "nextjs"
 }

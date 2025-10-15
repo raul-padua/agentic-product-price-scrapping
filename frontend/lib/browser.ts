@@ -20,6 +20,11 @@ export async function getBrowser(): Promise<CoreBrowser> {
   }
 
   // For serverless (Vercel), DO NOT cache - create fresh browser each time to avoid ETXTBSY
+  // Set proper font configuration for serverless
+  await chromium.font(
+    'https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf'
+  );
+  
   const executablePath = await chromium.executablePath();
   
   const args = [
@@ -28,6 +33,10 @@ export async function getBrowser(): Promise<CoreBrowser> {
     "--lang=en-US,en",
     "--single-process", // Critical for serverless
     "--no-zygote", // Critical for serverless
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
   ] as string[];
   if (proxyUrl) args.push(`--proxy-server=${proxyUrl}`);
   

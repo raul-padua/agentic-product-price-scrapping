@@ -20,24 +20,28 @@ This project is configured for deployment on Vercel as a monorepo with both fron
 
 ## Deployment Options
 
-### Option 1: Full Stack Deployment (Recommended)
+### Option 1: Frontend-Only Deployment (Recommended for Puppeteer)
 
-Deploy both frontend and backend together from the root directory.
+Due to Chromium/Puppeteer requirements, deploy frontend from the `frontend` directory.
 
 1. **Connect to Vercel:**
    - Connect your Git repository to Vercel
-   - Use the **root directory** as the deployment source
+   - **IMPORTANT: Set Root Directory to `frontend`** in Vercel project settings
+   - Framework Preset: Next.js (auto-detected)
 
 2. **Environment Variables:**
    Set these in Vercel dashboard:
    ```
    OPENAI_API_KEY=your-openai-key
+   PY_BACKEND_URL=/py-api  # or deploy backend separately
    ```
 
 3. **How it works:**
    - Frontend: Accessible at `https://your-app.vercel.app`
-   - Backend: Accessible at `https://your-app.vercel.app/py-api/*`
-   - Next.js API routes: `https://your-app.vercel.app/api/*`
+   - All API routes work from the frontend
+   - For Python backend, either:
+     - Deploy separately and point PY_BACKEND_URL to it
+     - Or deploy both (see Option 2)
 
 ### Option 2: Separate Deployments
 
