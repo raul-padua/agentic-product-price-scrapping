@@ -25,15 +25,29 @@ export async function POST(req: NextRequest) {
     }
 
     // If Python backend is available, run image extraction then refine
-    // Use /py-api for Vercel deployment, or PY_BACKEND_URL for local dev (http://127.0.0.1:8002)
-    const pyBackendUrl = process.env.PY_BACKEND_URL || "/py-api";
+    // Use PY_BACKEND_URL for local dev, or construct absolute URL for Vercel
+    const pyBackendUrl = process.env.PY_BACKEND_URL || 
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/py-api` : "/py-api");
+    
+    console.log("[ingest] Calling Python backend at:", pyBackendUrl);
+    
     try {
       const extRes = await fetch(`${pyBackendUrl}/image_extract`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url, screenshot_base64: screenshotBase64, mime: screenshotMime, model: visionModel, openai_key: openaiKey }),
       });
+      
+      console.log("[ingest] image_extract response status:", extRes.status);
+      
+      if (!extRes.ok) {
+        const errorText = await extRes.text();
+        console.error("[ingest] image_extract error:", errorText);
+        throw new Error(`image_extract failed: ${extRes.status} - ${errorText}`);
+      }
+      
       const extracted = await extRes.json();
+      console.log("[ingest] Extracted data:", { title: extracted?.title, price: extracted?.price });
 
       const refineRes = await fetch(`${pyBackendUrl}/refine`, {
         method: "POST",
@@ -48,7 +62,17 @@ export async function POST(req: NextRequest) {
           openai_key: openaiKey,
         }),
       });
+      
+      console.log("[ingest] refine response status:", refineRes.status);
+      
+      if (!refineRes.ok) {
+        const errorText = await refineRes.text();
+        console.error("[ingest] refine error:", errorText);
+        throw new Error(`refine failed: ${refineRes.status} - ${errorText}`);
+      }
+      
       const refined = await refineRes.json();
+      console.log("[ingest] Refined data:", refined);
 
       return new Response(
         JSON.stringify({
@@ -73,14 +97,16 @@ export async function POST(req: NextRequest) {
         }),
         { headers: { "Content-Type": "application/json" } }
       );
-    } catch (e) {
-      // fallback: just return the image payload
+    } catch (e: any) {
+      // Log the error and return it to the user
+      console.error("[ingest] Python backend error:", e?.message);
       return new Response(
         JSON.stringify({
           results: [
             {
               url,
-              ok: true,
+              ok: false,
+              error: `Python backend failed: ${e?.message ?? "Unknown error"}`,
               data: {
                 title: null,
                 price: { raw: null, value: null, currency: null },

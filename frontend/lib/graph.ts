@@ -41,8 +41,12 @@ workflow.addNode("extract", async (state: GraphState) => {
 
 workflow.addNode("refine", async (state: GraphState) => {
   if (!state.data) return {};
-  // Use /py-api for Vercel deployment, or PY_BACKEND_URL for local dev
-  const pyUrl = process.env.PY_BACKEND_URL || "/py-api";
+  // Use PY_BACKEND_URL for local dev, or construct absolute URL for Vercel
+  const pyUrl = process.env.PY_BACKEND_URL || 
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}/py-api` : "/py-api");
+  
+  console.log("[graph] Calling Python refine at:", pyUrl);
+  
   const res = await fetch(`${pyUrl.replace(/\/$/, "")}/refine`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -56,8 +60,13 @@ workflow.addNode("refine", async (state: GraphState) => {
       openai_key: state.openaiKey,
     }),
   });
+  
+  console.log("[graph] Refine response status:", res.status);
+  
   if (!res.ok) {
-    throw new Error(`Python refine failed: ${res.status}`);
+    const errorText = await res.text();
+    console.error("[graph] Refine error:", errorText);
+    throw new Error(`Python refine failed: ${res.status} - ${errorText}`);
   }
   const json = await res.json();
   return { refined: {
