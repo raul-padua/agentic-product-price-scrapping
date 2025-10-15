@@ -213,10 +213,12 @@ export default function Page() {
   return (
     <div>
       <h1 style={{ marginBottom: 8 }}>Product Capture & Analysis</h1>
-      <p style={{ opacity: 0.8, marginBottom: 24 }}>
-        Enter one or more product URLs (newline or comma separated). The app will
-        screenshot and extract product, price, and promotions.
+      <p style={{ opacity: 0.8, marginBottom: 12 }}>
+        Extract product information, prices, and promotions from e-commerce sites.
       </p>
+      <div style={{ background: "#fff3cd", border: "1px solid #ffc107", borderRadius: 8, padding: 12, marginBottom: 24 }}>
+        <strong>💡 Recommended:</strong> Use <strong>"Client capture (pick tab)"</strong> or <strong>"Upload screenshot"</strong> for best results. The "Run" button requires server resources that may not be available on this deployment.
+      </div>
       <form onSubmit={onSubmit} style={{ display: "grid", gap: 12 }}>
         <textarea
           value={urls}

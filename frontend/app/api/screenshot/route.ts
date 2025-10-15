@@ -23,8 +23,16 @@ export async function POST(req: NextRequest) {
       { headers: { "Content-Type": "application/json" } }
     );
   } catch (err: any) {
+    // Check if it's a Chromium-related error
+    const errorMsg = err?.message ?? "Unknown error";
+    const isChromiumError = errorMsg.includes('chromium') || errorMsg.includes('ETXTBSY') || errorMsg.includes('ENOENT');
+    
+    const userFriendlyError = isChromiumError
+      ? "Server screenshot capture is not available on this deployment. Please use 'Client capture (pick tab)' or 'Upload screenshot (PNG)' instead."
+      : errorMsg;
+    
     return new Response(
-      JSON.stringify({ ok: false, error: err?.message ?? "Unknown error" }),
+      JSON.stringify({ ok: false, error: userFriendlyError }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }

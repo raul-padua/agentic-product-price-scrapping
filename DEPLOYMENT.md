@@ -87,6 +87,20 @@ When deployed, these are accessible at `/py-api/*`:
 
 ## Troubleshooting
 
+### Server-side screenshot capture not working on Vercel
+**Issue:** "Run" button fails with Chromium/ETXTBSY errors
+
+**Why:** Puppeteer/Chromium has limitations on Vercel's Hobby plan:
+- Memory constraints (2048MB max)
+- Serverless file system restrictions  
+- Concurrent binary access issues
+
+**Solutions:**
+1. ✅ **Use "Client capture (pick tab)"** - Captures in your browser (recommended)
+2. ✅ **Use "Upload screenshot (PNG)"** - Upload a screenshot directly
+3. ⚠️ **Upgrade to Vercel Pro** - Better serverless function support
+4. ⚠️ **Deploy screenshot API separately** - Use Railway, Render, or Fly.io for the screenshot functionality
+
 ### Backend not responding in production
 - Check Vercel function logs
 - Verify OPENAI_API_KEY is set in environment variables
