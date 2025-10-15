@@ -20,12 +20,17 @@ export async function getBrowser(): Promise<CoreBrowser> {
   }
 
   // For serverless (Vercel), DO NOT cache - create fresh browser each time to avoid ETXTBSY
-  // Set proper font configuration for serverless
-  await chromium.font(
-    'https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf'
-  );
+  try {
+    // Try to load fonts for better rendering (optional, non-critical)
+    await chromium.font(
+      'https://raw.githack.com/googlei18n/noto-emoji/master/fonts/NotoColorEmoji.ttf'
+    );
+  } catch (e) {
+    console.warn('Could not load chromium fonts:', e);
+  }
   
-  const executablePath = await chromium.executablePath();
+  // Get chromium executable - this handles Vercel's serverless environment
+  const executablePath = await chromium.executablePath('/tmp');
   
   const args = [
     ...chromium.args,
